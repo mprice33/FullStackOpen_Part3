@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let phonebook = [
     { 
       "id": "1",
@@ -47,6 +49,32 @@ app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
   phonebook = phonebook.filter(person => person.id !== id)
   response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+  //const maxId = phonebook.length > 0
+  //  ? Math.max(...phonebook.map(n => Number(n.id)))
+  //  : 0
+
+  const randId = Math.round(Math.random() * 10000000000000)
+
+  const body = request.body
+   
+  if (!body.name || !body.number) {
+    return response.status(400).json({ 
+      error: 'Malformed json provided' 
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: randId,
+  }
+
+  phonebook = phonebook.concat(person)
+
+  response.json(person)
 })
 
 app.get('/info', (request, response) => {
