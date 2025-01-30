@@ -19,11 +19,20 @@ const app = express()
 //   response.status(404).send({ error: 'unknown endpoint' })
 // }
 
+
+morgan.token('jsonBody', function getBody (req) {
+  if (req.method !== 'POST') {
+    return null
+  }else{
+    return JSON.stringify(req.body)
+  }
+})
+
 app.use(express.json())
 // app.use(requestLogger)
 // app.use(unknownEndpoint)
 
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :jsonBody'))
 
 let phonebook = [
     { 
