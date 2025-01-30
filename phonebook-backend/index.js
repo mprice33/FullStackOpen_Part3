@@ -62,7 +62,13 @@ app.post('/api/persons', (request, response) => {
    
   if (!body.name || !body.number) {
     return response.status(400).json({ 
-      error: 'Malformed json provided' 
+      error: 'Malformed json sent; pleasue assure both name and number are provided' 
+    })
+  }
+
+  if (phonebook.find(person => person.name === body.name)) { 
+    return response.status(403).json({ 
+      error: 'Name must be unique'
     })
   }
 
